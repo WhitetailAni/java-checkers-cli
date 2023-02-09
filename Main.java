@@ -2,13 +2,19 @@ import java.util.Scanner;
 
 public class Main {
 
+    //setup for colored board
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static String ANSI_RED = "\u001B[31m";
+    public static String ANSI_WHITE = "\u001B[37m";
+    public static String ANSI_BLACK = "\u001B[30m";
+
     public static void main(String[] args){
         int[][] CheckerBoard = new int[8][8];
-	    System.out.println("0 = empty space");
-	    System.out.println("1 = black piece");
-	    System.out.println("2 = red piece");
-	    System.out.println("3 = black king");
-	    System.out.println("4 = red king");
+	    System.out.println(ANSI_WHITE + "0 = empty space" + ANSI_RESET);
+	    System.out.println(ANSI_BLACK + "1 = black piece" + ANSI_RESET);
+	    System.out.println(ANSI_RED + "2 = red piece" + ANSI_RESET);
+	    System.out.println(ANSI_BLACK + "3 = black king" + ANSI_RESET);
+	    System.out.println(ANSI_RED + "4 = red king" + ANSI_RESET);
 
         //setup board, topside
         for (int i = 0; i < 3; i++) {
@@ -77,7 +83,7 @@ public class Main {
         while(true) {
             if (blackTurn) {
                 printBoard(CheckerBoard);
-                System.out.println("It is BLACK's turn");
+                System.out.println("It is " + ANSI_BLACK + "BLACK's" + ANSI_RESET + " turn");
                 while (true) { //piece select loop
                     //get coordinates of desired piece
                     System.out.println("Input the row number of the piece you would like to move");
@@ -286,7 +292,6 @@ public class Main {
                             redCaptured++;
                             break;
                         }
-                        break;
                     }
                     System.out.println("Input the row number of the spot you would like to move to");
                     xDest = coordIn.nextInt();
@@ -350,9 +355,6 @@ public class Main {
             System.out.println("Black has won the game");
         } else if(redWon){
             System.out.println("Red has won the game");
-        } else {
-            System.out.println("Fatal error");
-            System.exit(-1);
         }
         if(blackCaptured == 1){
             System.out.println("Black captured 1 piece");
@@ -398,52 +400,114 @@ public class Main {
         return false;
     }
     static void printBoard(int[][] CheckerBoard){
-        System.out.println("Current board state:");
 
-        //tput sgr01
-        //(char)4
-        //https://stackoverflow.com/questions/5062458/font-settings-for-strings-in-java
-        System.out.println("x | " + "0 1 2 3 4 5 6 7");
-        System.out.println("    _ _ _ _ _ _ _ _");
+        System.out.println("Current board state:");
+        System.out.print("x ");
+        System.out.print((char)27 + "[4m| 0 1 2 3 4 5 6 7"); //underlines text
+        System.out.println((char)27 + "[0m"); //resets text formatting so the rest of the board is not underlined
 
         System.out.print("0 | ");
         for(int i=0; i<8; i++){
-            System.out.print(CheckerBoard[0][i] + " ");
+            if(CheckerBoard[0][i] == 0){
+                System.out.print(ANSI_WHITE + CheckerBoard[0][i] + ANSI_RESET);
+            } else if(CheckerBoard[0][i] == 1 || CheckerBoard[0][i] == 3){
+                System.out.print(ANSI_BLACK + CheckerBoard[0][i] + ANSI_RESET);
+            } else if(CheckerBoard[0][i] == 2 || CheckerBoard[0][i] == 4){
+                System.out.print(ANSI_RED + CheckerBoard[0][i] + ANSI_RESET);
+            }
+            //there's definitely better ways to do this
+            System.out.print(" ");
         }
         System.out.println();
+
         System.out.print("1 | ");
         for(int i=0; i<8; i++){
-            System.out.print(CheckerBoard[1][i] + " ");
+            if(CheckerBoard[1][i] == 0){
+                System.out.print(ANSI_WHITE + CheckerBoard[1][i] + ANSI_RESET);
+            } else if(CheckerBoard[1][i] == 1 || CheckerBoard[1][i] == 3){
+                System.out.print(ANSI_BLACK + CheckerBoard[1][i] + ANSI_RESET);
+            } else if(CheckerBoard[1][i] == 2 || CheckerBoard[1][i] == 4){
+                System.out.print(ANSI_RED + CheckerBoard[1][i] + ANSI_RESET);
+            }
+            System.out.print(" ");
         }
         System.out.println();
+
         System.out.print("2 | ");
         for(int i=0; i<8; i++){
-            System.out.print(CheckerBoard[2][i] + " ");
+            if(CheckerBoard[2][i] == 0){
+                System.out.print(ANSI_WHITE + CheckerBoard[2][i] + ANSI_RESET);
+            } else if(CheckerBoard[2][i] == 1 || CheckerBoard[2][i] == 3){
+                System.out.print(ANSI_BLACK + CheckerBoard[2][i] + ANSI_RESET);
+            } else if(CheckerBoard[2][i] == 2 || CheckerBoard[2][i] == 4){
+                System.out.print(ANSI_RED + CheckerBoard[2][i] + ANSI_RESET);
+            }
+            System.out.print(" ");
         }
         System.out.println();
+
         System.out.print("3 | ");
         for(int i=0; i<8; i++){
-            System.out.print(CheckerBoard[3][i] + " ");
+            if(CheckerBoard[3][i] == 0){
+                System.out.print(ANSI_WHITE + CheckerBoard[3][i] + ANSI_RESET);
+            } else if(CheckerBoard[3][i] == 1 || CheckerBoard[3][i] == 3){
+                System.out.print(ANSI_BLACK + CheckerBoard[3][i] + ANSI_RESET);
+            } else if(CheckerBoard[3][i] == 2 || CheckerBoard[3][i] == 4){
+                System.out.print(ANSI_RED + CheckerBoard[3][i] + ANSI_RESET);
+            }
+            System.out.print(" ");
         }
         System.out.println();
+
         System.out.print("4 | ");
         for(int i=0; i<8; i++){
-            System.out.print(CheckerBoard[4][i] + " ");
+            if(CheckerBoard[4][i] == 0){
+                System.out.print(ANSI_WHITE + CheckerBoard[4][i] + ANSI_RESET);
+            } else if(CheckerBoard[4][i] == 1 || CheckerBoard[4][i] == 3){
+                System.out.print(ANSI_BLACK + CheckerBoard[4][i] + ANSI_RESET);
+            } else if(CheckerBoard[4][i] == 2 || CheckerBoard[4][i] == 4){
+                System.out.print(ANSI_RED + CheckerBoard[4][i] + ANSI_RESET);
+            }
+            System.out.print(" ");
         }
         System.out.println();
+
         System.out.print("5 | ");
         for(int i=0; i<8; i++){
-            System.out.print(CheckerBoard[5][i] + " ");
+            if(CheckerBoard[5][i] == 0){
+                System.out.print(ANSI_WHITE + CheckerBoard[5][i] + ANSI_RESET);
+            } else if(CheckerBoard[5][i] == 1 || CheckerBoard[5][i] == 3){
+                System.out.print(ANSI_BLACK + CheckerBoard[5][i] + ANSI_RESET);
+            } else if(CheckerBoard[5][i] == 2 || CheckerBoard[5][i] == 4){
+                System.out.print(ANSI_RED + CheckerBoard[5][i] + ANSI_RESET);
+            }
+            System.out.print(" ");
         }
         System.out.println();
+
         System.out.print("6 | ");
         for(int i=0; i<8; i++){
-            System.out.print(CheckerBoard[6][i] + " ");
+            if(CheckerBoard[6][i] == 0){
+                System.out.print(ANSI_WHITE + CheckerBoard[6][i] + ANSI_RESET);
+            } else if(CheckerBoard[6][i] == 1 || CheckerBoard[6][i] == 3){
+                System.out.print(ANSI_BLACK + CheckerBoard[6][i] + ANSI_RESET);
+            } else if(CheckerBoard[6][i] == 2 || CheckerBoard[6][i] == 4){
+                System.out.print(ANSI_RED + CheckerBoard[6][i] + ANSI_RESET);
+            }
+            System.out.print(" ");
         }
         System.out.println();
+
         System.out.print("7 | ");
         for(int i=0; i<8; i++){
-            System.out.print(CheckerBoard[7][i] + " ");
+            if(CheckerBoard[7][i] == 0){
+                System.out.print(ANSI_WHITE + CheckerBoard[7][i] + ANSI_RESET);
+            } else if(CheckerBoard[7][i] == 1 || CheckerBoard[7][i] == 3){
+                System.out.print(ANSI_BLACK + CheckerBoard[7][i] + ANSI_RESET);
+            } else if(CheckerBoard[7][i] == 2 || CheckerBoard[7][i] == 4){
+                System.out.print(ANSI_RED + CheckerBoard[7][i] + ANSI_RESET);
+            }
+            System.out.print(" ");
         }
         System.out.println();
     }
