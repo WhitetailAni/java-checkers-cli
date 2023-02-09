@@ -5,16 +5,18 @@ public class Main {
     //setup for colored board
     public static final String ANSI_RESET = "\u001B[0m";
     public static String ANSI_RED = "\u001B[31m";
+    public static String ANSI_REDBG = "\u001B[41m";
     public static String ANSI_WHITE = "\u001B[37m";
     public static String ANSI_BLACK = "\u001B[30m";
+    public static String ANSI_BLACKBG = "\u001B[40m";
 
     public static void main(String[] args){
         int[][] CheckerBoard = new int[8][8];
 	    System.out.println(ANSI_WHITE + "0 = empty space" + ANSI_RESET);
 	    System.out.println(ANSI_BLACK + "1 = black piece" + ANSI_RESET);
 	    System.out.println(ANSI_RED + "2 = red piece" + ANSI_RESET);
-	    System.out.println(ANSI_BLACK + "3 = black king" + ANSI_RESET);
-	    System.out.println(ANSI_RED + "4 = red king" + ANSI_RESET);
+	    System.out.println(ANSI_BLACKBG + "3 = black king" + ANSI_RESET);
+	    System.out.println(ANSI_REDBG + ANSI_BLACK + "4 = red king" + ANSI_RESET);
 
         //setup board, topside
         for (int i = 0; i < 3; i++) {
@@ -57,6 +59,12 @@ public class Main {
         CheckerBoard[2][7] = 2;
         CheckerBoard[6][7] = 1;
 
+        //debug testing
+        CheckerBoard[0][3] = 4;
+        CheckerBoard[0][5] = 4;
+        CheckerBoard[7][2] = 3;
+        CheckerBoard[7][4] = 3;
+
         //determine whose turn it is
         boolean redTurn = false;
         boolean blackTurn = true;
@@ -79,17 +87,18 @@ public class Main {
 
         boolean blackWon = false;
         boolean redWon = false;
-        Scanner coordIn = new Scanner(System.in);
+        Scanner coordIn = new Scanner(System.in); //this Scanner handles all input during the game
         while(true) {
+            String intCoordIn;
             if (blackTurn) {
                 printBoard(CheckerBoard);
                 System.out.println("It is " + ANSI_BLACK + "BLACK's" + ANSI_RESET + " turn");
                 while (true) { //piece select loop
                     //get coordinates of desired piece
-                    System.out.println("Input the row number of the piece you would like to move");
-                    xSel = coordIn.nextInt();
-                    System.out.println("Input the column number of the piece you would like to move");
-                    ySel = coordIn.nextInt();
+                    System.out.println("Input the coordinates of the piece you would like to move, format 'x,y'");
+                    intCoordIn = coordIn.nextLine();
+                    xSel = Integer.parseInt(intCoordIn.substring(0,1));
+                    ySel = Integer.parseInt(intCoordIn.substring(2,3));
 
                     //check if coords are invalid
                     if (xSel == 69 && ySel == 420) {
@@ -145,14 +154,20 @@ public class Main {
                             CheckerBoard[xSel][ySel] = 0;
                             blackCaptured++;
                             break;
-                        } else if (((CheckerBoard[xSel + 1][ySel + 1] == 2 || CheckerBoard[xSel + 1][ySel + 1] == 4) && (CheckerBoard[xSel + 2][ySel + 2] == 0 || cheatModeBlack)) && CheckerBoard[xSel][ySel] == 3) {
+                        } else if ((CheckerBoard[xSel][ySel] == 3 && !(xSel >= 6)) //piece is a king AND xSel <= 5 (prevents out of bounds errors)
+                                //this statement is placed first to abuse java logic rules, if the first condition isn't met it skips checking the rest, thereby avoiding an out of bounds error.
+                                    && // AND
+                                ((CheckerBoard[xSel + 1][ySel + 1] == 2 || CheckerBoard[xSel + 1][ySel + 1] == 4) //adjacent piece is red's (can be jumped)
+                                    &&  //AND
+                                (CheckerBoard[xSel + 2][ySel + 2] == 0 || cheatModeBlack)))  //destination spot is open OR cheatMode is enabled
+                        {
                             System.out.println("You must make a forced jump");
                             CheckerBoard[xSel + 2][ySel + 2] = CheckerBoard[xSel][ySel];
                             CheckerBoard[xSel + 1][ySel + 1] = 0;
                             CheckerBoard[xSel][ySel] = 0;
                             blackCaptured++;
                             break;
-                        } else if (((CheckerBoard[xSel + 1][ySel - 1] == 2 || CheckerBoard[xSel + 1][ySel - 1] == 4 ) && (CheckerBoard[xSel + 2][ySel - 2] == 0 || cheatModeBlack)) && CheckerBoard[xSel][ySel] == 3) {
+                        } else if ((CheckerBoard[xSel][ySel] == 3 && !(xSel >= 6)) && ((CheckerBoard[xSel + 1][ySel - 1] == 2 || CheckerBoard[xSel + 1][ySel - 1] == 4 ) && (CheckerBoard[xSel + 2][ySel - 2] == 0 || cheatModeBlack))) {
                             System.out.println("You must make a forced jump");
                             CheckerBoard[xSel + 2][ySel - 2] = CheckerBoard[xSel][ySel];
                             CheckerBoard[xSel + 1][ySel - 1] = 0;
@@ -161,10 +176,10 @@ public class Main {
                             break;
                         }
                     }
-                    System.out.println("Input the row number of the spot you would like to move to");
-                    xDest = coordIn.nextInt();
-                    System.out.println("Input the column number of the spot you would like to move to");
-                    yDest = coordIn.nextInt();
+                    System.out.println("Input the coordinates of the spot you would like to move to, format 'x,y'");
+                    intCoordIn = coordIn.nextLine();
+                    xDest = Integer.parseInt(intCoordIn.substring(0,1));
+                    yDest = Integer.parseInt(intCoordIn.substring(2,3));
 
                     if((CheckerBoard[xSel][ySel] == 3 && //if the piece is a king AND
                             ((xDest == xSel - 1 || xDest == xSel + 1) && //destination x-coord is +/- 1 of the piece's x-coord AND
@@ -186,16 +201,19 @@ public class Main {
                         } else {
                             System.out.println("The destination coordinates must be empty");
                             System.out.println("Select new piece? '1' for yes, '0' for no");
-                            misclick = coordIn.nextInt();
+                            misclick = Integer.parseInt(coordIn.nextLine().substring(0,1));
                             if (misclick == 1) {
-                                System.out.println("Input the row number of the piece you would like to move");
-                                xSel = coordIn.nextInt();
-                                System.out.println("Input the column number of the piece you would like to move");
-                                ySel = coordIn.nextInt();
-
+                                System.out.println("Input the coordinates of the piece you would like to move, format 'x,y'");
+                                intCoordIn = coordIn.nextLine();
+                                xSel = Integer.parseInt(intCoordIn.substring(0,1));
+                                ySel = Integer.parseInt(intCoordIn.substring(2,3));
                                 if (xSel == 69 && ySel == 420) {
-                                    System.out.println("Cheat mode activated");
-                                    cheatModeBlack = true;
+                                    System.out.println("Cheat mode toggled");
+                                    if(cheatModeBlack){
+                                        cheatModeBlack = false;
+                                    } else {
+                                        cheatModeBlack = true;
+                                    }
                                 } else if (CheckerBoard[xSel][ySel] == 2 || CheckerBoard[xSel][ySel] == 4) {
                                     System.out.println("You cannot move red's pieces");
                                 } else if (CheckerBoard[xSel][ySel] == 0) {
@@ -223,10 +241,10 @@ public class Main {
                 printBoard(CheckerBoard);
                 while (true) { //piece select loop
                     System.out.println("It is RED's turn");
-                    System.out.println("Input the row number of the piece you would like to move");
-                    xSel = coordIn.nextInt();
-                    System.out.println("Input the column number of the piece you would like to move");
-                    ySel = coordIn.nextInt();
+                    System.out.println("Input the coordinates of the piece you would like to move, format 'x,y'");
+                    intCoordIn = coordIn.nextLine();
+                    xSel = Integer.parseInt(intCoordIn.substring(0,1));
+                    ySel = Integer.parseInt(intCoordIn.substring(2,3));
 
                     if (xSel == 420 && ySel == 69) {
                         System.out.println("Cheat mode toggled");
@@ -277,14 +295,14 @@ public class Main {
                             CheckerBoard[xSel][ySel] = 0;
                             redCaptured++;
                             break;
-                        } else if (((CheckerBoard[xSel - 1][ySel + 1] == 1 || CheckerBoard[xSel - 1][ySel + 1] == 3) && (CheckerBoard[xSel - 2][ySel + 2] == 0 || cheatModeRed)) && CheckerBoard[xSel][ySel] == 3) {
+                        } else if ((CheckerBoard[xSel][ySel] == 3 && !(xSel <= 1)) && ((CheckerBoard[xSel - 1][ySel + 1] == 1 || CheckerBoard[xSel - 1][ySel + 1] == 3) && (CheckerBoard[xSel - 2][ySel + 2] == 0 || cheatModeRed))) {
                             System.out.println("You must make a forced jump");
                             CheckerBoard[xSel - 2][ySel + 2] = CheckerBoard[xSel][ySel];
                             CheckerBoard[xSel - 1][ySel + 1] = 0;
                             CheckerBoard[xSel][ySel] = 0;
                             redCaptured++;
                             break;
-                        } else if (((CheckerBoard[xSel - 1][ySel - 1] == 1 || CheckerBoard[xSel - 1][ySel - 1] == 3) && (CheckerBoard[xSel - 2][ySel - 2] == 0 || cheatModeRed)) && CheckerBoard[xSel][ySel] == 3) {
+                        } else if ((CheckerBoard[xSel][ySel] == 3 && !(xSel <= 1)) && ((CheckerBoard[xSel - 1][ySel - 1] == 1 || CheckerBoard[xSel - 1][ySel - 1] == 3) && (CheckerBoard[xSel - 2][ySel - 2] == 0 || cheatModeRed))) {
                             System.out.println("You must make a forced jump");
                             CheckerBoard[xSel - 2][ySel - 2] = CheckerBoard[xSel][ySel];
                             CheckerBoard[xSel - 1][ySel - 1] = 0;
@@ -293,10 +311,10 @@ public class Main {
                             break;
                         }
                     }
-                    System.out.println("Input the row number of the spot you would like to move to");
-                    xDest = coordIn.nextInt();
-                    System.out.println("Input the column number of the spot you would like to move to");
-                    yDest = coordIn.nextInt();
+                    System.out.println("Input the coordinates of the spot you would like to move to, format 'x,y'");
+                    intCoordIn = coordIn.nextLine();
+                    xDest = Integer.parseInt(intCoordIn.substring(0,1));
+                    yDest = Integer.parseInt(intCoordIn.substring(2,3));
                     if((CheckerBoard[xSel][ySel] == 4 && //if the piece is a king AND
                             ((xDest == xSel - 1 || xDest == xSel + 1) && //destination x-coord is +/- 1 of the piece's x-coord AND
                                     (yDest == ySel + 1 || yDest == ySel - 1))) //destination y-coord is +/- 1 of the piece's y-coord
@@ -317,16 +335,20 @@ public class Main {
                         } else {
                             System.out.println("The destination coordinates must be empty");
                             System.out.println("Select new piece? '1' for yes, '0' for no");
-                            misclick = coordIn.nextInt();
+                            misclick = Integer.parseInt(coordIn.nextLine().substring(0,1));
                             if (misclick == 1) {
-                                System.out.println("Input the row number of the piece you would like to move");
-                                xSel = coordIn.nextInt();
-                                System.out.println("Input the column number of the piece you would like to move");
-                                ySel = coordIn.nextInt();
+                                System.out.println("Input the coordinates of the piece you would like to move, format 'x,y'");
+                                intCoordIn = coordIn.nextLine();
+                                xSel = Integer.parseInt(intCoordIn.substring(0,1));
+                                ySel = Integer.parseInt(intCoordIn.substring(2,3));
 
                                 if (xSel == 420 && ySel == 69) {
-                                    System.out.println("Cheat mode activated");
-                                    cheatModeRed = true;
+                                    System.out.println("Cheat mode toggled");
+                                    if(cheatModeRed){
+                                        cheatModeRed = false;
+                                    } else {
+                                        cheatModeRed = true;
+                                    }
                                 } else if (CheckerBoard[xSel][ySel] == 1 || CheckerBoard[xSel][ySel] == 3) {
                                     System.out.println("You cannot move black's pieces");
                                 } else if (CheckerBoard[xSel][ySel] == 0) {
@@ -410,10 +432,14 @@ public class Main {
         for(int i=0; i<8; i++){
             if(CheckerBoard[0][i] == 0){
                 System.out.print(ANSI_WHITE + CheckerBoard[0][i] + ANSI_RESET);
-            } else if(CheckerBoard[0][i] == 1 || CheckerBoard[0][i] == 3){
+            } else if(CheckerBoard[0][i] == 1){
                 System.out.print(ANSI_BLACK + CheckerBoard[0][i] + ANSI_RESET);
-            } else if(CheckerBoard[0][i] == 2 || CheckerBoard[0][i] == 4){
+            } else if(CheckerBoard[0][i] == 2){
                 System.out.print(ANSI_RED + CheckerBoard[0][i] + ANSI_RESET);
+            } else if(CheckerBoard[0][i] == 3){
+                System.out.print(ANSI_BLACKBG + CheckerBoard[0][i] + ANSI_RESET);
+            } else if(CheckerBoard[0][i] == 4){
+                System.out.print(ANSI_REDBG + ANSI_BLACK + CheckerBoard[0][i] + ANSI_RESET);
             }
             //there's definitely better ways to do this
             System.out.print(" ");
@@ -424,10 +450,14 @@ public class Main {
         for(int i=0; i<8; i++){
             if(CheckerBoard[1][i] == 0){
                 System.out.print(ANSI_WHITE + CheckerBoard[1][i] + ANSI_RESET);
-            } else if(CheckerBoard[1][i] == 1 || CheckerBoard[1][i] == 3){
+            } else if(CheckerBoard[1][i] == 1){
                 System.out.print(ANSI_BLACK + CheckerBoard[1][i] + ANSI_RESET);
-            } else if(CheckerBoard[1][i] == 2 || CheckerBoard[1][i] == 4){
+            } else if(CheckerBoard[1][i] == 2){
                 System.out.print(ANSI_RED + CheckerBoard[1][i] + ANSI_RESET);
+            } else if(CheckerBoard[1][i] == 3){
+                System.out.print(ANSI_BLACKBG + CheckerBoard[1][i] + ANSI_RESET);
+            } else if(CheckerBoard[1][i] == 4){
+                System.out.print(ANSI_REDBG + ANSI_BLACK + CheckerBoard[1][i] + ANSI_RESET);
             }
             System.out.print(" ");
         }
@@ -437,10 +467,14 @@ public class Main {
         for(int i=0; i<8; i++){
             if(CheckerBoard[2][i] == 0){
                 System.out.print(ANSI_WHITE + CheckerBoard[2][i] + ANSI_RESET);
-            } else if(CheckerBoard[2][i] == 1 || CheckerBoard[2][i] == 3){
+            } else if(CheckerBoard[2][i] == 1){
                 System.out.print(ANSI_BLACK + CheckerBoard[2][i] + ANSI_RESET);
-            } else if(CheckerBoard[2][i] == 2 || CheckerBoard[2][i] == 4){
+            } else if(CheckerBoard[2][i] == 2){
                 System.out.print(ANSI_RED + CheckerBoard[2][i] + ANSI_RESET);
+            } else if(CheckerBoard[2][i] == 3){
+                System.out.print(ANSI_BLACKBG + CheckerBoard[2][i] + ANSI_RESET);
+            } else if(CheckerBoard[2][i] == 4){
+                System.out.print(ANSI_REDBG + ANSI_BLACK + CheckerBoard[2][i] + ANSI_RESET);
             }
             System.out.print(" ");
         }
@@ -450,10 +484,14 @@ public class Main {
         for(int i=0; i<8; i++){
             if(CheckerBoard[3][i] == 0){
                 System.out.print(ANSI_WHITE + CheckerBoard[3][i] + ANSI_RESET);
-            } else if(CheckerBoard[3][i] == 1 || CheckerBoard[3][i] == 3){
+            } else if(CheckerBoard[3][i] == 1){
                 System.out.print(ANSI_BLACK + CheckerBoard[3][i] + ANSI_RESET);
-            } else if(CheckerBoard[3][i] == 2 || CheckerBoard[3][i] == 4){
+            } else if(CheckerBoard[3][i] == 2){
                 System.out.print(ANSI_RED + CheckerBoard[3][i] + ANSI_RESET);
+            } else if(CheckerBoard[3][i] == 3){
+                System.out.print(ANSI_BLACKBG + CheckerBoard[3][i] + ANSI_RESET);
+            } else if(CheckerBoard[3][i] == 4){
+                System.out.print(ANSI_REDBG + ANSI_BLACK + CheckerBoard[3][i] + ANSI_RESET);
             }
             System.out.print(" ");
         }
@@ -463,10 +501,14 @@ public class Main {
         for(int i=0; i<8; i++){
             if(CheckerBoard[4][i] == 0){
                 System.out.print(ANSI_WHITE + CheckerBoard[4][i] + ANSI_RESET);
-            } else if(CheckerBoard[4][i] == 1 || CheckerBoard[4][i] == 3){
+            } else if(CheckerBoard[4][i] == 1){
                 System.out.print(ANSI_BLACK + CheckerBoard[4][i] + ANSI_RESET);
-            } else if(CheckerBoard[4][i] == 2 || CheckerBoard[4][i] == 4){
+            } else if(CheckerBoard[4][i] == 2){
                 System.out.print(ANSI_RED + CheckerBoard[4][i] + ANSI_RESET);
+            } else if(CheckerBoard[4][i] == 3){
+                System.out.print(ANSI_BLACKBG + CheckerBoard[4][i] + ANSI_RESET);
+            } else if(CheckerBoard[4][i] == 4){
+                System.out.print(ANSI_REDBG + ANSI_BLACK + CheckerBoard[4][i] + ANSI_RESET);
             }
             System.out.print(" ");
         }
@@ -476,10 +518,14 @@ public class Main {
         for(int i=0; i<8; i++){
             if(CheckerBoard[5][i] == 0){
                 System.out.print(ANSI_WHITE + CheckerBoard[5][i] + ANSI_RESET);
-            } else if(CheckerBoard[5][i] == 1 || CheckerBoard[5][i] == 3){
+            } else if(CheckerBoard[5][i] == 1){
                 System.out.print(ANSI_BLACK + CheckerBoard[5][i] + ANSI_RESET);
-            } else if(CheckerBoard[5][i] == 2 || CheckerBoard[5][i] == 4){
+            } else if(CheckerBoard[5][i] == 2){
                 System.out.print(ANSI_RED + CheckerBoard[5][i] + ANSI_RESET);
+            } else if(CheckerBoard[5][i] == 3){
+                System.out.print(ANSI_BLACKBG + CheckerBoard[5][i] + ANSI_RESET);
+            } else if(CheckerBoard[5][i] == 4){
+                System.out.print(ANSI_REDBG + ANSI_BLACK + CheckerBoard[5][i] + ANSI_RESET);
             }
             System.out.print(" ");
         }
@@ -489,10 +535,14 @@ public class Main {
         for(int i=0; i<8; i++){
             if(CheckerBoard[6][i] == 0){
                 System.out.print(ANSI_WHITE + CheckerBoard[6][i] + ANSI_RESET);
-            } else if(CheckerBoard[6][i] == 1 || CheckerBoard[6][i] == 3){
+            } else if(CheckerBoard[6][i] == 1){
                 System.out.print(ANSI_BLACK + CheckerBoard[6][i] + ANSI_RESET);
-            } else if(CheckerBoard[6][i] == 2 || CheckerBoard[6][i] == 4){
+            } else if(CheckerBoard[6][i] == 2){
                 System.out.print(ANSI_RED + CheckerBoard[6][i] + ANSI_RESET);
+            } else if(CheckerBoard[6][i] == 3){
+                System.out.print(ANSI_BLACKBG + CheckerBoard[6][i] + ANSI_RESET);
+            } else if(CheckerBoard[6][i] == 4){
+                System.out.print(ANSI_REDBG + ANSI_BLACK + CheckerBoard[6][i] + ANSI_RESET);
             }
             System.out.print(" ");
         }
@@ -502,10 +552,14 @@ public class Main {
         for(int i=0; i<8; i++){
             if(CheckerBoard[7][i] == 0){
                 System.out.print(ANSI_WHITE + CheckerBoard[7][i] + ANSI_RESET);
-            } else if(CheckerBoard[7][i] == 1 || CheckerBoard[7][i] == 3){
+            } else if(CheckerBoard[7][i] == 1){
                 System.out.print(ANSI_BLACK + CheckerBoard[7][i] + ANSI_RESET);
-            } else if(CheckerBoard[7][i] == 2 || CheckerBoard[7][i] == 4){
+            } else if(CheckerBoard[7][i] == 2){
                 System.out.print(ANSI_RED + CheckerBoard[7][i] + ANSI_RESET);
+            } else if(CheckerBoard[7][i] == 3){
+                System.out.print(ANSI_BLACKBG + CheckerBoard[7][i] + ANSI_RESET);
+            } else if(CheckerBoard[7][i] == 4){
+                System.out.print(ANSI_REDBG + ANSI_BLACK + CheckerBoard[7][i] + ANSI_RESET);
             }
             System.out.print(" ");
         }
