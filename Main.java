@@ -10,8 +10,16 @@ public class Main {
     public static String ANSI_BLACK = "\u001B[30m";
     public static String ANSI_BLACKBG = "\u001B[40m";
 
+
     public static void main(String[] args) throws NumberFormatException{
         int[][] CheckerBoard = new int[8][8];
+
+        //credits
+        System.out.println("Checkers, written in Java, made by WhitetailAni");
+        System.out.println("Copyright (c) 2023 WhitetailAni under the MIT license");
+
+
+        //explain what each piece is
 	    System.out.println(ANSI_WHITE + "0 = empty space" + ANSI_RESET);
 	    System.out.println(ANSI_BLACK + "1 = black piece" + ANSI_RESET);
 	    System.out.println(ANSI_RED + "2 = red piece" + ANSI_RESET);
