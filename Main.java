@@ -7,8 +7,8 @@ public class backend {
     public static String ANSI_RED = "\u001B[31m";
     public static String ANSI_REDBG = "\u001B[41m";
     public static String ANSI_WHITE = "\u001B[37m";
-    public static String ANSI_BLACK = "\u001B[30m";
-    public static String ANSI_BLACKBG = "\u001B[40m";
+    public static String ANSI_BLACK = "\u001B[34m";
+    public static String ANSI_BLACKBG = "\u001B[44m";
 
     public static void main(String[] args) throws NumberFormatException{
 	int[][] CheckerBoard = new int[8][8];
