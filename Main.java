@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class Main {
+public class backend {
 
     //setup for colored board
     public static final String ANSI_RESET = "\u001B[0m";
@@ -10,9 +10,8 @@ public class Main {
     public static String ANSI_BLACK = "\u001B[30m";
     public static String ANSI_BLACKBG = "\u001B[40m";
 
-
     public static void main(String[] args) throws NumberFormatException{
-        int[][] CheckerBoard = new int[8][8];
+	int[][] CheckerBoard = new int[8][8];
 
         //credits
         System.out.println("Checkers, written in Java, made by WhitetailAni");
@@ -20,11 +19,11 @@ public class Main {
 
 
         //explain what each piece is
-	    System.out.println(ANSI_WHITE + "0 = empty space" + ANSI_RESET);
-	    System.out.println(ANSI_BLACK + "1 = black piece" + ANSI_RESET);
-	    System.out.println(ANSI_RED + "2 = red piece" + ANSI_RESET);
-	    System.out.println(ANSI_BLACKBG + "3 = black king" + ANSI_RESET);
-	    System.out.println(ANSI_REDBG + ANSI_BLACK + "4 = red king" + ANSI_RESET);
+        System.out.println(ANSI_WHITE + "0 = empty space" + ANSI_RESET);
+        System.out.println(ANSI_BLACK + "1 = black piece" + ANSI_RESET);
+        System.out.println(ANSI_RED + "2 = red piece" + ANSI_RESET);
+        System.out.println(ANSI_BLACKBG + "3 = black king" + ANSI_RESET);
+        System.out.println(ANSI_REDBG + ANSI_BLACK + "4 = red king" + ANSI_RESET);
 
         //setup board, topside
         for (int i = 0; i < 3; i++) {
@@ -76,8 +75,8 @@ public class Main {
         //checkers managing
         int xSel = 0; //x-coord of selected piece. Set to 0 by default due to multiturn logic
         int ySel = 0; //y-coord of selected piece
-        int xDest; //x-coord of destination (only used if not jumping a piece)
-        int yDest; //y-coord of destination (only used if not jumping a piece)
+        int xDest = 0; //x-coord of destination (only used if not jumping a piece)
+        int yDest = 0; //y-coord of destination (only used if not jumping a piece)
         int misclick; //used in case of misinput (prevent game softlocks)
         boolean multiturn; //used to determine if the player can take another turn or not (only used if a piece was jumped
 
@@ -110,7 +109,7 @@ public class Main {
                                 xSel = Integer.parseInt(intCoordIn.substring(0, 1));
                                 ySel = Integer.parseInt(intCoordIn.substring(2, 3));
                                 //check if coords are invalid
-                                if (xSel == 69 && ySel == 420) {
+                                if (xSel == 6 && ySel == 9) {
                                     System.out.println("Cheat mode toggled");
                                     cheatModeBlack = !cheatModeBlack;
                                 } else if (CheckerBoard[xSel][ySel] == 2 || CheckerBoard[xSel][ySel] == 4) {
@@ -121,7 +120,7 @@ public class Main {
                                     break pieceSelectBlack;
                                 }
                             }
-                            catch(NumberFormatException e){
+                            catch(NumberFormatException | StringIndexOutOfBoundsException e){
                                 System.out.println("You can only input coordinates in the format 'x,y'!");
                             }
                         }
@@ -132,7 +131,7 @@ public class Main {
                             if (
                                     !(xSel <= 1) //the piece is not in a corner (fixes out of bounds)
                                             && //AND
-                                    (CheckerBoard[xSel - 1][ySel + 1] == 2 || CheckerBoard[xSel - 1][ySel + 1] == 4) //there is a jumpable piece that is RED's
+                                            (CheckerBoard[xSel - 1][ySel + 1] == 2 || CheckerBoard[xSel - 1][ySel + 1] == 4) //there is a jumpable piece that is RED's
                                             && //AND
                                             (CheckerBoard[xSel - 2][ySel + 2] == 0 || cheatModeBlack)) //the destination if the piece is jumped is open
                             {
@@ -235,8 +234,13 @@ public class Main {
                         }
                         System.out.println("Input the coordinates of the spot you would like to move to, format 'x,y'");
                         intCoordIn = coordIn.nextLine();
-                        xDest = Integer.parseInt(intCoordIn.substring(0, 1));
-                        yDest = Integer.parseInt(intCoordIn.substring(2, 3));
+                        try {
+                            xDest = Integer.parseInt(intCoordIn.substring(0, 1));
+                            yDest = Integer.parseInt(intCoordIn.substring(2, 3));
+                        }
+                        catch(NumberFormatException | StringIndexOutOfBoundsException e){
+                            System.out.println("You can only input coordinates in the format 'x,y'!");
+                        }
 
                         if ((CheckerBoard[xSel][ySel] == 3 && //if the piece is a king AND
                                 ((xDest == xSel - 1 || xDest == xSel + 1) && //destination x-coord is +/- 1 of the piece's x-coord AND
@@ -256,15 +260,15 @@ public class Main {
                                 }
                                 break pieceMoveBlack;
                             } else {
-                                System.out.println("The destination coordinates must be empty");
-                                System.out.println("Select new piece? '1' for yes, '0' for no");
-                                misclick = Integer.parseInt(coordIn.nextLine().substring(0, 1));
-                                if (misclick == 1) {
-                                    System.out.println("Input the coordinates of the piece you would like to move, format 'x,y'");
-                                    intCoordIn = coordIn.nextLine();
-                                    try {
-                                        xSel = Integer.valueOf(intCoordIn.substring(0, 1));
-                                        ySel = Integer.valueOf(intCoordIn.substring(2, 3));
+                                try {
+                                    System.out.println("The destination coordinates must be empty");
+                                    System.out.println("Select new piece? '1' for yes, '0' for no");
+                                    misclick = Integer.parseInt(coordIn.nextLine().substring(0, 1));
+                                    if (misclick == 1) {
+                                        System.out.println("Input the coordinates of the piece you would like to move, format 'x,y'");
+                                        intCoordIn = coordIn.nextLine();
+                                        xSel = Integer.parseInt(intCoordIn.substring(0, 1));
+                                        ySel = Integer.parseInt(intCoordIn.substring(2, 3));
                                         if (xSel == 69 && ySel == 420) {
                                             System.out.println("Cheat mode toggled");
                                             cheatModeBlack = !cheatModeBlack;
@@ -274,10 +278,11 @@ public class Main {
                                             System.out.println("You cannot move an empty space");
                                         }
                                     }
-                                    catch(NumberFormatException e){
-                                        System.out.println("You can only input coordinates in the format 'x,y'!"); //actually, the character in between the first and second numbers can be whatever you want
-                                        //dont tell anyone
-                                    }
+                                }
+                                catch(NumberFormatException | StringIndexOutOfBoundsException e){
+                                    System.out.println("You can only input coordinates in the format 'x,y'!");
+                                    //actually, the character in between the first and second numbers can be whatever you want
+                                    //dont tell anyone
                                 }
                             }
                         } else {
@@ -311,18 +316,23 @@ public class Main {
                             System.out.println("It is " + ANSI_RED + "RED's" + ANSI_RESET + " turn");
                             System.out.println("Input the coordinates of the piece you would like to move, format 'x,y'");
                             intCoordIn = coordIn.nextLine();
-                            xSel = Integer.parseInt(intCoordIn.substring(0, 1));
-                            ySel = Integer.parseInt(intCoordIn.substring(2, 3));
+                            try {
+                                xSel = Integer.parseInt(intCoordIn.substring(0, 1));
+                                ySel = Integer.parseInt(intCoordIn.substring(2, 3));
 
-                            if (xSel == 420 && ySel == 69) {
-                                System.out.println("Cheat mode toggled");
-                                cheatModeRed = !cheatModeRed;
-                            } else if (CheckerBoard[xSel][ySel] == 1 || CheckerBoard[xSel][ySel] == 3) {
-                                System.out.println("You cannot move black's pieces");
-                            } else if (CheckerBoard[xSel][ySel] == 0) {
-                                System.out.println("You cannot move an empty space");
-                            } else {
-                                break pieceSelectRed;
+                                if (xSel == 420 && ySel == 69) {
+                                    System.out.println("Cheat mode toggled");
+                                    cheatModeRed = !cheatModeRed;
+                                } else if (CheckerBoard[xSel][ySel] == 1 || CheckerBoard[xSel][ySel] == 3) {
+                                    System.out.println("You cannot move black's pieces");
+                                } else if (CheckerBoard[xSel][ySel] == 0) {
+                                    System.out.println("You cannot move an empty space");
+                                } else {
+                                    break pieceSelectRed;
+                                }
+                            }
+                            catch(NumberFormatException | StringIndexOutOfBoundsException e){
+                                System.out.println("You can only input coordinates in the format 'x,y'!");
                             }
                         }
                     }
@@ -374,7 +384,7 @@ public class Main {
                                 break pieceMoveRed;
                             }
                         } else {
-                            if ((CheckerBoard[xSel + 1][ySel + 1] == 1 || CheckerBoard[xSel + 1][ySel + 1] == 3) && (CheckerBoard[xSel + 2][ySel + 2] == 0 || cheatModeRed)) {
+                            if (!(xSel >= 6) && (CheckerBoard[xSel + 1][ySel + 1] == 1 || CheckerBoard[xSel + 1][ySel + 1] == 3) && (CheckerBoard[xSel + 2][ySel + 2] == 0 || cheatModeRed)) {
                                 System.out.println("You must make a forced jump");
                                 CheckerBoard[xSel + 2][ySel + 2] = CheckerBoard[xSel][ySel];
                                 CheckerBoard[xSel + 1][ySel + 1] = 0;
@@ -421,8 +431,13 @@ public class Main {
                         }
                         System.out.println("Input the coordinates of the spot you would like to move to, format 'x,y'");
                         intCoordIn = coordIn.nextLine();
-                        xDest = Integer.parseInt(intCoordIn.substring(0, 1));
-                        yDest = Integer.parseInt(intCoordIn.substring(2, 3));
+                        try {
+                            xDest = Integer.parseInt(intCoordIn.substring(0, 1));
+                            yDest = Integer.parseInt(intCoordIn.substring(2, 3));
+                        }
+                        catch(NumberFormatException | StringIndexOutOfBoundsException e){
+                            System.out.println("You can only input coordinates in the format 'x,y'!");
+                        }
                         if ((CheckerBoard[xSel][ySel] == 4 && //if the piece is a king AND
                                 ((xDest == xSel - 1 || xDest == xSel + 1) && //destination x-coord is +/- 1 of the piece's x-coord AND
                                         (yDest == ySel + 1 || yDest == ySel - 1))) //destination y-coord is +/- 1 of the piece's y-coord
@@ -441,23 +456,28 @@ public class Main {
                                 }
                                 break;
                             } else {
-                                System.out.println("The destination coordinates must be empty");
-                                System.out.println("Select new piece? '1' for yes, '0' for no");
-                                misclick = Integer.parseInt(coordIn.nextLine().substring(0, 1));
-                                if (misclick == 1) {
-                                    System.out.println("Input the coordinates of the piece you would like to move, format 'x,y'");
-                                    intCoordIn = coordIn.nextLine();
-                                    xSel = Integer.parseInt(intCoordIn.substring(0, 1));
-                                    ySel = Integer.parseInt(intCoordIn.substring(2, 3));
+                                try {
+                                    System.out.println("The destination coordinates must be empty");
+                                    System.out.println("Select new piece? '1' for yes, '0' for no");
+                                    misclick = Integer.parseInt(coordIn.nextLine().substring(0, 1));
+                                    if (misclick == 1) {
+                                        System.out.println("Input the coordinates of the piece you would like to move, format 'x,y'");
+                                        intCoordIn = coordIn.nextLine();
+                                        xSel = Integer.parseInt(intCoordIn.substring(0, 1));
+                                        ySel = Integer.parseInt(intCoordIn.substring(2, 3));
 
-                                    if (xSel == 420 && ySel == 69) {
-                                        System.out.println("Cheat mode toggled");
-                                        cheatModeRed = !cheatModeRed;
-                                    } else if (CheckerBoard[xSel][ySel] == 1 || CheckerBoard[xSel][ySel] == 3) {
-                                        System.out.println("You cannot move black's pieces");
-                                    } else if (CheckerBoard[xSel][ySel] == 0) {
-                                        System.out.println("You cannot move an empty space");
+                                        if (xSel == 420 && ySel == 69) {
+                                            System.out.println("Cheat mode toggled");
+                                            cheatModeRed = !cheatModeRed;
+                                        } else if (CheckerBoard[xSel][ySel] == 1 || CheckerBoard[xSel][ySel] == 3) {
+                                            System.out.println("You cannot move black's pieces");
+                                        } else if (CheckerBoard[xSel][ySel] == 0) {
+                                            System.out.println("You cannot move an empty space");
+                                        }
                                     }
+                                }
+                                catch(NumberFormatException | StringIndexOutOfBoundsException e){
+                                    System.out.println("You can only input coordinates in the format 'x,y'!");
                                 }
                             }
                         } else {
