@@ -9,6 +9,8 @@ public class Main {
     public static String ANSI_WHITE = "\u001B[37m";
     public static String ANSI_BLACK = "\u001B[30m";
     public static String ANSI_BLACKBG = "\u001B[40m";
+    public static String ANSI_BLUE = "\u001B[34m";
+    public static String ANSI_BLUEBG = "\u001B[44m";
 
     //the int[][] array that stores checker positions
     public static int[][] CheckerBoard = new int[8][8]; //makes board available to GUI class as well as Main class
@@ -36,9 +38,9 @@ public class Main {
 
         //explain what each piece is
         System.out.println(ANSI_WHITE + "0 = empty space" + ANSI_RESET);
-        System.out.println(ANSI_BLACK + "1 = black piece" + ANSI_RESET);
+        System.out.println(ANSI_BLUE + "1 = black piece" + ANSI_RESET);
         System.out.println(ANSI_RED + "2 = red piece" + ANSI_RESET);
-        System.out.println(ANSI_BLACKBG + "3 = black king" + ANSI_RESET);
+        System.out.println(ANSI_BLACKBG + ANSI_BLUE + "3 = black king" + ANSI_RESET);
         System.out.println(ANSI_REDBG + ANSI_BLACK + "4 = red king" + ANSI_RESET);
 
         //setup board, topside
@@ -98,7 +100,7 @@ public class Main {
                 errorCheck = false;
                 multiturn = false;
                 printBoard(CheckerBoard, false);
-                System.out.println("It is " + ANSI_BLACK + "BLACK's" + ANSI_RESET + " turn");
+                System.out.println("It is " + ANSI_BLUE + "BLACK's" + ANSI_RESET + " turn");
                 masterBlack:
                 while (true) { //masterBlack
                     pieceSelectBlack:
@@ -535,11 +537,11 @@ public class Main {
             if(CheckerBoard[0][i] == 0){
                 System.out.print(ANSI_WHITE + CheckerBoard[0][i] + ANSI_RESET);
             } else if(CheckerBoard[0][i] == 1){
-                System.out.print(ANSI_BLACK + CheckerBoard[0][i] + ANSI_RESET);
+                System.out.print(ANSI_BLUE + CheckerBoard[0][i] + ANSI_RESET);
             } else if(CheckerBoard[0][i] == 2){
                 System.out.print(ANSI_RED + CheckerBoard[0][i] + ANSI_RESET);
             } else if(CheckerBoard[0][i] == 3){
-                System.out.print(ANSI_BLACKBG + CheckerBoard[0][i] + ANSI_RESET);
+                System.out.print(ANSI_BLACKBG + ANSI_BLUE + CheckerBoard[0][i] + ANSI_RESET);
             } else if(CheckerBoard[0][i] == 4){
                 System.out.print(ANSI_REDBG + ANSI_BLACK + CheckerBoard[0][i] + ANSI_RESET);
             }
@@ -553,11 +555,11 @@ public class Main {
             if(CheckerBoard[1][i] == 0){
                 System.out.print(ANSI_WHITE + CheckerBoard[1][i] + ANSI_RESET);
             } else if(CheckerBoard[1][i] == 1){
-                System.out.print(ANSI_BLACK + CheckerBoard[1][i] + ANSI_RESET);
+                System.out.print(ANSI_BLUE + CheckerBoard[1][i] + ANSI_RESET);
             } else if(CheckerBoard[1][i] == 2){
                 System.out.print(ANSI_RED + CheckerBoard[1][i] + ANSI_RESET);
             } else if(CheckerBoard[1][i] == 3){
-                System.out.print(ANSI_BLACKBG + CheckerBoard[1][i] + ANSI_RESET);
+                System.out.print(ANSI_BLACKBG + ANSI_BLUE + CheckerBoard[1][i] + ANSI_RESET);
             } else if(CheckerBoard[1][i] == 4){
                 System.out.print(ANSI_REDBG + ANSI_BLACK + CheckerBoard[1][i] + ANSI_RESET);
             }
@@ -570,11 +572,11 @@ public class Main {
             if(CheckerBoard[2][i] == 0){
                 System.out.print(ANSI_WHITE + CheckerBoard[2][i] + ANSI_RESET);
             } else if(CheckerBoard[2][i] == 1){
-                System.out.print(ANSI_BLACK + CheckerBoard[2][i] + ANSI_RESET);
+                System.out.print(ANSI_BLUE + CheckerBoard[2][i] + ANSI_RESET);
             } else if(CheckerBoard[2][i] == 2){
                 System.out.print(ANSI_RED + CheckerBoard[2][i] + ANSI_RESET);
             } else if(CheckerBoard[2][i] == 3){
-                System.out.print(ANSI_BLACKBG + CheckerBoard[2][i] + ANSI_RESET);
+                System.out.print(ANSI_BLACKBG + ANSI_BLUE + CheckerBoard[2][i] + ANSI_RESET);
             } else if(CheckerBoard[2][i] == 4){
                 System.out.print(ANSI_REDBG + ANSI_BLACK + CheckerBoard[2][i] + ANSI_RESET);
             }
@@ -587,11 +589,11 @@ public class Main {
             if(CheckerBoard[3][i] == 0){
                 System.out.print(ANSI_WHITE + CheckerBoard[3][i] + ANSI_RESET);
             } else if(CheckerBoard[3][i] == 1){
-                System.out.print(ANSI_BLACK + CheckerBoard[3][i] + ANSI_RESET);
+                System.out.print(ANSI_BLUE + CheckerBoard[3][i] + ANSI_RESET);
             } else if(CheckerBoard[3][i] == 2){
                 System.out.print(ANSI_RED + CheckerBoard[3][i] + ANSI_RESET);
             } else if(CheckerBoard[3][i] == 3){
-                System.out.print(ANSI_BLACKBG + CheckerBoard[3][i] + ANSI_RESET);
+                System.out.print(ANSI_BLACKBG + ANSI_BLUE + CheckerBoard[3][i] + ANSI_RESET);
             } else if(CheckerBoard[3][i] == 4){
                 System.out.print(ANSI_REDBG + ANSI_BLACK + CheckerBoard[3][i] + ANSI_RESET);
             }
@@ -604,11 +606,11 @@ public class Main {
             if(CheckerBoard[4][i] == 0){
                 System.out.print(ANSI_WHITE + CheckerBoard[4][i] + ANSI_RESET);
             } else if(CheckerBoard[4][i] == 1){
-                System.out.print(ANSI_BLACK + CheckerBoard[4][i] + ANSI_RESET);
+                System.out.print(ANSI_BLUE + CheckerBoard[4][i] + ANSI_RESET);
             } else if(CheckerBoard[4][i] == 2){
                 System.out.print(ANSI_RED + CheckerBoard[4][i] + ANSI_RESET);
             } else if(CheckerBoard[4][i] == 3){
-                System.out.print(ANSI_BLACKBG + CheckerBoard[4][i] + ANSI_RESET);
+                System.out.print(ANSI_BLACKBG + ANSI_BLUE + CheckerBoard[4][i] + ANSI_RESET);
             } else if(CheckerBoard[4][i] == 4){
                 System.out.print(ANSI_REDBG + ANSI_BLACK + CheckerBoard[4][i] + ANSI_RESET);
             }
@@ -621,11 +623,11 @@ public class Main {
             if(CheckerBoard[5][i] == 0){
                 System.out.print(ANSI_WHITE + CheckerBoard[5][i] + ANSI_RESET);
             } else if(CheckerBoard[5][i] == 1){
-                System.out.print(ANSI_BLACK + CheckerBoard[5][i] + ANSI_RESET);
+                System.out.print(ANSI_BLUE + CheckerBoard[5][i] + ANSI_RESET);
             } else if(CheckerBoard[5][i] == 2){
                 System.out.print(ANSI_RED + CheckerBoard[5][i] + ANSI_RESET);
             } else if(CheckerBoard[5][i] == 3){
-                System.out.print(ANSI_BLACKBG + CheckerBoard[5][i] + ANSI_RESET);
+                System.out.print(ANSI_BLACKBG + ANSI_BLUE + CheckerBoard[5][i] + ANSI_RESET);
             } else if(CheckerBoard[5][i] == 4){
                 System.out.print(ANSI_REDBG + ANSI_BLACK + CheckerBoard[5][i] + ANSI_RESET);
             }
@@ -638,11 +640,11 @@ public class Main {
             if(CheckerBoard[6][i] == 0){
                 System.out.print(ANSI_WHITE + CheckerBoard[6][i] + ANSI_RESET);
             } else if(CheckerBoard[6][i] == 1){
-                System.out.print(ANSI_BLACK + CheckerBoard[6][i] + ANSI_RESET);
+                System.out.print(ANSI_BLUE + CheckerBoard[6][i] + ANSI_RESET);
             } else if(CheckerBoard[6][i] == 2){
                 System.out.print(ANSI_RED + CheckerBoard[6][i] + ANSI_RESET);
             } else if(CheckerBoard[6][i] == 3){
-                System.out.print(ANSI_BLACKBG + CheckerBoard[6][i] + ANSI_RESET);
+                System.out.print(ANSI_BLACKBG + ANSI_BLUE + CheckerBoard[6][i] + ANSI_RESET);
             } else if(CheckerBoard[6][i] == 4){
                 System.out.print(ANSI_REDBG + ANSI_BLACK + CheckerBoard[6][i] + ANSI_RESET);
             }
@@ -655,11 +657,11 @@ public class Main {
             if(CheckerBoard[7][i] == 0){
                 System.out.print(ANSI_WHITE + CheckerBoard[7][i] + ANSI_RESET);
             } else if(CheckerBoard[7][i] == 1){
-                System.out.print(ANSI_BLACK + CheckerBoard[7][i] + ANSI_RESET);
+                System.out.print(ANSI_BLUE + CheckerBoard[7][i] + ANSI_RESET);
             } else if(CheckerBoard[7][i] == 2){
                 System.out.print(ANSI_RED + CheckerBoard[7][i] + ANSI_RESET);
             } else if(CheckerBoard[7][i] == 3){
-                System.out.print(ANSI_BLACKBG + CheckerBoard[7][i] + ANSI_RESET);
+                System.out.print(ANSI_BLACKBG + ANSI_BLUE + CheckerBoard[7][i] + ANSI_RESET);
             } else if(CheckerBoard[7][i] == 4){
                 System.out.print(ANSI_REDBG + ANSI_BLACK + CheckerBoard[7][i] + ANSI_RESET);
             }
