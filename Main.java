@@ -448,6 +448,8 @@ public class Main {
                                 || // OR
                                 cheatModeRed) //cheatMode is enabled (skip destination checks)
                         {
+                            CheckerBoard[xDest][yDest] = CheckerBoard[xSel][ySel];
+                            CheckerBoard[xSel][ySel] = 0;
                             if (xDest == 7) {
                                 System.out.println("Red piece at " + xDest + "," + yDest + " is now a king, and can move any direction");
                                 CheckerBoard[xDest][yDest] = 4;
