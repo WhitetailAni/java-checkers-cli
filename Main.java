@@ -123,7 +123,7 @@ public class Main {
                                     System.out.println("Cheat mode toggled");
                                     cheatModeBlack = !cheatModeBlack;
                                 } else if (CheckerBoard[xSel][ySel] == 2 || CheckerBoard[xSel][ySel] == 4) {
-                                    System.out.println("You cannot move red's pieces");
+                                    System.out.println("You cannot move RED's pieces");
                                 } else if (CheckerBoard[xSel][ySel] == 0) {
                                     System.out.println("You cannot move an empty space");
                                 } else {
@@ -138,12 +138,9 @@ public class Main {
                     pieceMoveBlack:
                     while (true) { //pieceMoveBlack, destination select and jump loop
                         if (ySel <= 1) {
-                            if (
-                                    !(xSel <= 1) //the piece is not in a corner (fixes out of bounds)
-                                            && //AND
-                                            (CheckerBoard[xSel - 1][ySel + 1] == 2 || CheckerBoard[xSel - 1][ySel + 1] == 4) //there is a jumpable piece that is RED's
-                                            && //AND
-                                            (CheckerBoard[xSel - 2][ySel + 2] == 0 || cheatModeBlack)) //the destination if the piece is jumped is open
+                            if (!(xSel <= 1) && (CheckerBoard[xSel - 1][ySel + 1] == 2 || CheckerBoard[xSel - 1][ySel + 1] == 4) //there is a jumpable piece that is RED's
+                                    && //AND
+                                    (CheckerBoard[xSel - 2][ySel + 2] == 0 || cheatModeBlack)) //the destination if the piece is jumped is open
                             {
                                 System.out.println("You must make a forced jump");
                                 CheckerBoard[xSel - 2][ySel + 2] = CheckerBoard[xSel][ySel];
@@ -153,7 +150,7 @@ public class Main {
                                 multiturn = true;
                                 xSel = xSel - 2;
                                 ySel = ySel + 2;
-                                break pieceMoveBlack;
+                                break pieceMoveBlack; //labels aren't necessary, but they make the code easier to read
                             }
                             if (!(xSel >= 6) && (CheckerBoard[xSel + 1][ySel + 1] == 2 || CheckerBoard[xSel + 1][ySel + 1] == 4) && (CheckerBoard[xSel + 2][ySel + 2] == 0 || cheatModeBlack)) {
                                 System.out.println("You must make a forced jump");
@@ -164,7 +161,7 @@ public class Main {
                                 multiturn = true;
                                 xSel = xSel + 2;
                                 ySel = ySel + 2;
-                                break pieceMoveBlack;
+                                break;
                             }
                         } else if (ySel >= 6) {
                             if (!(xSel <= 1) && (CheckerBoard[xSel - 1][ySel - 1] == 2 || CheckerBoard[xSel - 1][ySel - 1] == 4) && (CheckerBoard[xSel - 2][ySel - 2] == 0 || cheatModeBlack)) {
@@ -178,7 +175,7 @@ public class Main {
                                 ySel = ySel - 2;
                                 break pieceMoveBlack;
                             }
-                            if ((CheckerBoard[xSel + 1][ySel - 1] == 2 || CheckerBoard[xSel + 1][ySel - 1] == 4) && (CheckerBoard[xSel + 2][ySel - 2] == 0 || cheatModeBlack)) {
+                            if (!(xSel >= 6) && (CheckerBoard[xSel + 1][ySel - 1] == 2 || CheckerBoard[xSel + 1][ySel - 1] == 4) && (CheckerBoard[xSel + 2][ySel - 2] == 0 || cheatModeBlack)) {
                                 System.out.println("You must make a forced jump");
                                 CheckerBoard[xSel + 2][ySel - 2] = CheckerBoard[xSel][ySel];
                                 CheckerBoard[xSel + 1][ySel - 1] = 0;
@@ -227,7 +224,7 @@ public class Main {
                                 xSel = xSel + 2;
                                 ySel = ySel + 2;
                                 break pieceMoveBlack;
-                            } else if ((CheckerBoard[xSel][ySel] == 3 && !(xSel >= 6 || xSel <= 1)) && ((CheckerBoard[xSel + 1][ySel - 1] == 2 || CheckerBoard[xSel + 1][ySel - 1] == 4) && (CheckerBoard[xSel + 2][ySel - 2] == 0 || cheatModeBlack))) {
+                            } else if ((CheckerBoard[xSel][ySel] == 3 && !(xSel >= 6)) && ((CheckerBoard[xSel + 1][ySel - 1] == 2 || CheckerBoard[xSel + 1][ySel - 1] == 4) && (CheckerBoard[xSel + 2][ySel - 2] == 0 || cheatModeBlack))) {
                                 System.out.println("You must make a forced jump");
                                 CheckerBoard[xSel + 2][ySel - 2] = CheckerBoard[xSel][ySel];
                                 CheckerBoard[xSel + 1][ySel - 1] = 0;
@@ -253,18 +250,24 @@ public class Main {
                         }
 
                         if (((((CheckerBoard[xSel][ySel] == 3 && //if the piece is a king AND
-                                ((xDest == xSel - 1 || xDest == xSel + 1) && //destination x-coord is +/- 1 of the piece's x-coord AND
+                                ((xDest == xSel - 1 || xDest == xSel + 1) //destination x-coord is +/- 1 of the piece's x-coord
+                                        && // AND
                                         (yDest == ySel + 1 || yDest == ySel - 1))) //destination y-coord is +/- 1 of the piece's y-coord
                                 || // OR
-                                (xDest == xSel - 1 && //destination x-coord is -1 of piece's x-coord (piece is moving towards the other side) AND
+                                (xDest == xSel - 1 //destination x-coord is -1 of piece's x-coord (piece is moving towards the other side)
+                                        && // AND
                                         (yDest == ySel + 1 || yDest == ySel - 1)))) //destination y-coord is +/- 1 of piece's y-coord
                                 && // AND
                                 CheckerBoard[xDest][yDest] == 0) //destination is empty
                                 || // OR
                                 cheatModeBlack) //cheatMode is enabled (skip destination checks)
-                        {
+                        { //this MASSIVE if statement makes sure the destination is valid.
+                            //split into multiple lines for readability
+                            //have fun!
                             CheckerBoard[xDest][yDest] = CheckerBoard[xSel][ySel];
-                            CheckerBoard[xSel][ySel] = 0;
+                            if (xSel != xDest && ySel != yDest) {
+                                CheckerBoard[xSel][ySel] = 0;
+                            }
                             if (xDest == 0 && CheckerBoard[xDest][yDest] != 3) {
                                 System.out.println("Black piece at " + xDest + "," + yDest + " is now a king, and can move any direction");
                                 CheckerBoard[xDest][yDest] = 3;
@@ -288,7 +291,7 @@ public class Main {
                         }
                     }
                     System.out.println(errorCheck);
-                    if(multiturn == false && errorCheck == false){
+                    if (!multiturn && !errorCheck) {
                         break masterBlack;
                     }
                 }
@@ -324,7 +327,7 @@ public class Main {
                                     System.out.println("Cheat mode toggled");
                                     cheatModeRed = !cheatModeRed;
                                 } else if (CheckerBoard[xSel][ySel] == 1 || CheckerBoard[xSel][ySel] == 3) {
-                                    System.out.println("You cannot move black's pieces");
+                                    System.out.println("You cannot move BLACK's pieces");
                                 } else if (CheckerBoard[xSel][ySel] == 0) {
                                     System.out.println("You cannot move an empty space");
                                 } else {
@@ -339,7 +342,7 @@ public class Main {
                     pieceMoveRed:
                     while (true) { // destination select loop
                         if (ySel <= 1) {
-                            if ((CheckerBoard[xSel + 1][ySel + 1] == 1 || CheckerBoard[xSel + 1][ySel + 1] == 3) && CheckerBoard[xSel + 2][ySel + 2] == 0) {
+                            if (!(xSel >= 6) && (CheckerBoard[xSel + 1][ySel + 1] == 1 || CheckerBoard[xSel + 1][ySel + 1] == 3) && CheckerBoard[xSel + 2][ySel + 2] == 0) {
                                 System.out.println("You must make a forced jump");
                                 CheckerBoard[xSel + 2][ySel + 2] = CheckerBoard[xSel][ySel];
                                 CheckerBoard[xSel + 1][ySel + 1] = 0;
@@ -361,7 +364,7 @@ public class Main {
                                 break pieceMoveRed;
                             }
                         } else if (ySel >= 6) {
-                            if (xSel >= 1 && (CheckerBoard[xSel - 1][ySel - 1] == 1 || CheckerBoard[xSel - 1][ySel - 1] == 3) && (CheckerBoard[xSel - 2][ySel - 2] == 0 || cheatModeRed) && CheckerBoard[xSel][ySel] == 4) {
+                            if (CheckerBoard[xSel][ySel] == 4 && (xSel >= 1 && (CheckerBoard[xSel - 1][ySel - 1] == 1 || CheckerBoard[xSel - 1][ySel - 1] == 3) && (CheckerBoard[xSel - 2][ySel - 2] == 0 || cheatModeRed))) {
                                 System.out.println("You must make a forced jump");
                                 CheckerBoard[xSel - 2][ySel - 2] = CheckerBoard[xSel][ySel];
                                 CheckerBoard[xSel - 1][ySel - 1] = 0;
@@ -372,7 +375,7 @@ public class Main {
                                 ySel = ySel - 2;
                                 break pieceMoveRed;
                             }
-                            if (!(xSel >= 6) && (CheckerBoard[xSel + 1][ySel - 1] == 1 || CheckerBoard[xSel + 1][ySel - 1] == 3) && (CheckerBoard[xSel + 2][ySel - 2] == 0 || cheatModeRed) && CheckerBoard[xSel][ySel] == 4) {
+                            if (!(xSel >= 6) && (CheckerBoard[xSel + 1][ySel - 1] == 1 || CheckerBoard[xSel + 1][ySel - 1] == 3) && (CheckerBoard[xSel + 2][ySel - 2] == 0 || cheatModeRed)) {
                                 System.out.println("You must make a forced jump");
                                 CheckerBoard[xSel + 2][ySel - 2] = CheckerBoard[xSel][ySel];
                                 CheckerBoard[xSel + 1][ySel - 1] = 0;
@@ -394,7 +397,7 @@ public class Main {
                                 xSel = xSel + 2;
                                 ySel = ySel + 2;
                                 break pieceMoveRed;
-                            } else if ((CheckerBoard[xSel + 1][ySel - 1] == 1 || CheckerBoard[xSel + 1][ySel - 1] == 3) && (CheckerBoard[xSel + 2][ySel - 2] == 0 || cheatModeRed)) {
+                            } else if (!(xSel >= 6) && (CheckerBoard[xSel + 1][ySel - 1] == 1 || CheckerBoard[xSel + 1][ySel - 1] == 3) && (CheckerBoard[xSel + 2][ySel - 2] == 0 || cheatModeRed)) {
                                 System.out.println("You must make a forced jump");
                                 CheckerBoard[xSel + 2][ySel - 2] = CheckerBoard[xSel][ySel];
                                 CheckerBoard[xSel + 1][ySel - 1] = 0;
@@ -404,7 +407,7 @@ public class Main {
                                 xSel = xSel + 2;
                                 ySel = ySel - 2;
                                 break pieceMoveRed;
-                            } else if ((CheckerBoard[xSel][ySel] == 4 && !(xSel <= 1 || xSel >= 6)) && ((CheckerBoard[xSel - 1][ySel + 1] == 1 || CheckerBoard[xSel - 1][ySel + 1] == 3) && (CheckerBoard[xSel - 2][ySel + 2] == 0 || cheatModeRed))) {
+                            } else if (!(xSel >= 6) && (CheckerBoard[xSel][ySel] == 4) && ((CheckerBoard[xSel - 1][ySel + 1] == 1 || CheckerBoard[xSel - 1][ySel + 1] == 3) && (CheckerBoard[xSel - 2][ySel + 2] == 0 || cheatModeRed))) {
                                 System.out.println("You must make a forced jump");
                                 CheckerBoard[xSel - 2][ySel + 2] = CheckerBoard[xSel][ySel];
                                 CheckerBoard[xSel - 1][ySel + 1] = 0;
@@ -414,7 +417,7 @@ public class Main {
                                 xSel = xSel - 2;
                                 ySel = ySel + 2;
                                 break pieceMoveRed;
-                            } else if ((CheckerBoard[xSel][ySel] == 4 && !(xSel <= 1 || xSel >= 6)) && ((CheckerBoard[xSel - 1][ySel - 1] == 1 || CheckerBoard[xSel - 1][ySel - 1] == 3) && (CheckerBoard[xSel - 2][ySel - 2] == 0 || cheatModeRed))) {
+                            } else if ((CheckerBoard[xSel][ySel] == 4 && !(xSel <= 1)) && ((CheckerBoard[xSel - 1][ySel - 1] == 1 || CheckerBoard[xSel - 1][ySel - 1] == 3) && (CheckerBoard[xSel - 2][ySel - 2] == 0 || cheatModeRed))) {
                                 System.out.println("You must make a forced jump");
                                 CheckerBoard[xSel - 2][ySel - 2] = CheckerBoard[xSel][ySel];
                                 CheckerBoard[xSel - 1][ySel - 1] = 0;
@@ -438,10 +441,12 @@ public class Main {
                             System.out.println("You can only input coordinates in the format 'x,y'!");
                         }
                         if ((((CheckerBoard[xSel][ySel] == 4 && //if the piece is a king AND
-                                ((xDest == xSel - 1 || xDest == xSel + 1) && //destination x-coord is +/- 1 of the piece's x-coord AND
+                                ((xDest == xSel - 1 || xDest == xSel + 1) //destination x-coord is +/- 1 of the piece's x-coord
+                                        && //AND
                                         (yDest == ySel + 1 || yDest == ySel - 1))) //destination y-coord is +/- 1 of the piece's y-coord
                                 || // OR
-                                (xDest == xSel + 1 && //destination x-coord is +1 of piece's x-coord (piece is moving towards the other side) AND
+                                (xDest == xSel + 1 //destination x-coord is +1 of piece's x-coord (piece is moving towards the other side)
+                                        && //AND
                                         (yDest == ySel + 1 || yDest == ySel - 1))) //destination y-coord is +/- 1 of piece's y-coord
                                 && // AND
                                 CheckerBoard[xDest][yDest] == 0) //destination is empty
@@ -449,7 +454,9 @@ public class Main {
                                 cheatModeRed) //cheatMode is enabled (skip destination checks)
                         {
                             CheckerBoard[xDest][yDest] = CheckerBoard[xSel][ySel];
-                            CheckerBoard[xSel][ySel] = 0;
+                            if (xSel != xDest && ySel != yDest) {
+                                CheckerBoard[xSel][ySel] = 0;
+                            }
                             if (xDest == 7) {
                                 System.out.println("Red piece at " + xDest + "," + yDest + " is now a king, and can move any direction");
                                 CheckerBoard[xDest][yDest] = 4;
@@ -469,7 +476,7 @@ public class Main {
                             }
                         }
                     }
-                    if(multiturn == false && errorCheck == false){
+                    if (!multiturn && !errorCheck) {
                         break masterRed;
                     }
                 }
@@ -529,146 +536,29 @@ public class Main {
             System.out.println("Final board state:");
         } else {
             System.out.println("Current board state:");
-        }
+        } //leftover from CLI but handy if viewing debug log
         System.out.print("x ");
         System.out.print((char)27 + "[4m| 0 1 2 3 4 5 6 7"); //underlines text
         System.out.println((char)27 + "[0m"); //resets text formatting so the rest of the board is not underlined
+        int newline = 0;
 
-        System.out.print("0 | ");
-        for(int i=0; i<8; i++){
-            if(CheckerBoard[0][i] == 0){
-                System.out.print(ANSI_WHITE + CheckerBoard[0][i] + ANSI_RESET);
-            } else if(CheckerBoard[0][i] == 1){
-                System.out.print(ANSI_BLUE + CheckerBoard[0][i] + ANSI_RESET);
-            } else if(CheckerBoard[0][i] == 2){
-                System.out.print(ANSI_RED + CheckerBoard[0][i] + ANSI_RESET);
-            } else if(CheckerBoard[0][i] == 3){
-                System.out.print(ANSI_BLACKBG + ANSI_BLUE + CheckerBoard[0][i] + ANSI_RESET);
-            } else if(CheckerBoard[0][i] == 4){
-                System.out.print(ANSI_REDBG + ANSI_BLACK + CheckerBoard[0][i] + ANSI_RESET);
+        for (int i = 0; i<8; i++) { //prints out checkerboard. now uses nested for loop instead of eight single for loops
+            System.out.print(newline + " | ");
+            for (int j = 0; j<8; j++) {
+                if(CheckerBoard[i][j] == 0){
+                    System.out.print(ANSI_WHITE + CheckerBoard[i][j] + ANSI_RESET + " ");
+                } else if(CheckerBoard[i][j] == 1){
+                    System.out.print(ANSI_BLUE + CheckerBoard[i][j] + ANSI_RESET + " ");
+                } else if(CheckerBoard[i][j] == 2){
+                    System.out.print(ANSI_RED + CheckerBoard[i][j] + ANSI_RESET + " ");
+                } else if(CheckerBoard[i][j] == 3){
+                    System.out.print(ANSI_BLACKBG + ANSI_BLUE + CheckerBoard[i][j] + ANSI_RESET + " ");
+                } else if(CheckerBoard[i][j] == 4){
+                    System.out.print(ANSI_REDBG + ANSI_BLACK + CheckerBoard[i][j] + ANSI_RESET + " ");
+                }
             }
-            //there's definitely better ways to do this
-            System.out.print(" ");
+            newline++;
+            System.out.println();
         }
-        System.out.println();
-
-        System.out.print("1 | ");
-        for(int i=0; i<8; i++){
-            if(CheckerBoard[1][i] == 0){
-                System.out.print(ANSI_WHITE + CheckerBoard[1][i] + ANSI_RESET);
-            } else if(CheckerBoard[1][i] == 1){
-                System.out.print(ANSI_BLUE + CheckerBoard[1][i] + ANSI_RESET);
-            } else if(CheckerBoard[1][i] == 2){
-                System.out.print(ANSI_RED + CheckerBoard[1][i] + ANSI_RESET);
-            } else if(CheckerBoard[1][i] == 3){
-                System.out.print(ANSI_BLACKBG + ANSI_BLUE + CheckerBoard[1][i] + ANSI_RESET);
-            } else if(CheckerBoard[1][i] == 4){
-                System.out.print(ANSI_REDBG + ANSI_BLACK + CheckerBoard[1][i] + ANSI_RESET);
-            }
-            System.out.print(" ");
-        }
-        System.out.println();
-
-        System.out.print("2 | ");
-        for(int i=0; i<8; i++){
-            if(CheckerBoard[2][i] == 0){
-                System.out.print(ANSI_WHITE + CheckerBoard[2][i] + ANSI_RESET);
-            } else if(CheckerBoard[2][i] == 1){
-                System.out.print(ANSI_BLUE + CheckerBoard[2][i] + ANSI_RESET);
-            } else if(CheckerBoard[2][i] == 2){
-                System.out.print(ANSI_RED + CheckerBoard[2][i] + ANSI_RESET);
-            } else if(CheckerBoard[2][i] == 3){
-                System.out.print(ANSI_BLACKBG + ANSI_BLUE + CheckerBoard[2][i] + ANSI_RESET);
-            } else if(CheckerBoard[2][i] == 4){
-                System.out.print(ANSI_REDBG + ANSI_BLACK + CheckerBoard[2][i] + ANSI_RESET);
-            }
-            System.out.print(" ");
-        }
-        System.out.println();
-
-        System.out.print("3 | ");
-        for(int i=0; i<8; i++){
-            if(CheckerBoard[3][i] == 0){
-                System.out.print(ANSI_WHITE + CheckerBoard[3][i] + ANSI_RESET);
-            } else if(CheckerBoard[3][i] == 1){
-                System.out.print(ANSI_BLUE + CheckerBoard[3][i] + ANSI_RESET);
-            } else if(CheckerBoard[3][i] == 2){
-                System.out.print(ANSI_RED + CheckerBoard[3][i] + ANSI_RESET);
-            } else if(CheckerBoard[3][i] == 3){
-                System.out.print(ANSI_BLACKBG + ANSI_BLUE + CheckerBoard[3][i] + ANSI_RESET);
-            } else if(CheckerBoard[3][i] == 4){
-                System.out.print(ANSI_REDBG + ANSI_BLACK + CheckerBoard[3][i] + ANSI_RESET);
-            }
-            System.out.print(" ");
-        }
-        System.out.println();
-
-        System.out.print("4 | ");
-        for(int i=0; i<8; i++){
-            if(CheckerBoard[4][i] == 0){
-                System.out.print(ANSI_WHITE + CheckerBoard[4][i] + ANSI_RESET);
-            } else if(CheckerBoard[4][i] == 1){
-                System.out.print(ANSI_BLUE + CheckerBoard[4][i] + ANSI_RESET);
-            } else if(CheckerBoard[4][i] == 2){
-                System.out.print(ANSI_RED + CheckerBoard[4][i] + ANSI_RESET);
-            } else if(CheckerBoard[4][i] == 3){
-                System.out.print(ANSI_BLACKBG + ANSI_BLUE + CheckerBoard[4][i] + ANSI_RESET);
-            } else if(CheckerBoard[4][i] == 4){
-                System.out.print(ANSI_REDBG + ANSI_BLACK + CheckerBoard[4][i] + ANSI_RESET);
-            }
-            System.out.print(" ");
-        }
-        System.out.println();
-
-        System.out.print("5 | ");
-        for(int i=0; i<8; i++){
-            if(CheckerBoard[5][i] == 0){
-                System.out.print(ANSI_WHITE + CheckerBoard[5][i] + ANSI_RESET);
-            } else if(CheckerBoard[5][i] == 1){
-                System.out.print(ANSI_BLUE + CheckerBoard[5][i] + ANSI_RESET);
-            } else if(CheckerBoard[5][i] == 2){
-                System.out.print(ANSI_RED + CheckerBoard[5][i] + ANSI_RESET);
-            } else if(CheckerBoard[5][i] == 3){
-                System.out.print(ANSI_BLACKBG + ANSI_BLUE + CheckerBoard[5][i] + ANSI_RESET);
-            } else if(CheckerBoard[5][i] == 4){
-                System.out.print(ANSI_REDBG + ANSI_BLACK + CheckerBoard[5][i] + ANSI_RESET);
-            }
-            System.out.print(" ");
-        }
-        System.out.println();
-
-        System.out.print("6 | ");
-        for(int i=0; i<8; i++){
-            if(CheckerBoard[6][i] == 0){
-                System.out.print(ANSI_WHITE + CheckerBoard[6][i] + ANSI_RESET);
-            } else if(CheckerBoard[6][i] == 1){
-                System.out.print(ANSI_BLUE + CheckerBoard[6][i] + ANSI_RESET);
-            } else if(CheckerBoard[6][i] == 2){
-                System.out.print(ANSI_RED + CheckerBoard[6][i] + ANSI_RESET);
-            } else if(CheckerBoard[6][i] == 3){
-                System.out.print(ANSI_BLACKBG + ANSI_BLUE + CheckerBoard[6][i] + ANSI_RESET);
-            } else if(CheckerBoard[6][i] == 4){
-                System.out.print(ANSI_REDBG + ANSI_BLACK + CheckerBoard[6][i] + ANSI_RESET);
-            }
-            System.out.print(" ");
-        }
-        System.out.println();
-
-        System.out.print("7 | ");
-        for(int i=0; i<8; i++){
-            if(CheckerBoard[7][i] == 0){
-                System.out.print(ANSI_WHITE + CheckerBoard[7][i] + ANSI_RESET);
-            } else if(CheckerBoard[7][i] == 1){
-                System.out.print(ANSI_BLUE + CheckerBoard[7][i] + ANSI_RESET);
-            } else if(CheckerBoard[7][i] == 2){
-                System.out.print(ANSI_RED + CheckerBoard[7][i] + ANSI_RESET);
-            } else if(CheckerBoard[7][i] == 3){
-                System.out.print(ANSI_BLACKBG + ANSI_BLUE + CheckerBoard[7][i] + ANSI_RESET);
-            } else if(CheckerBoard[7][i] == 4){
-                System.out.print(ANSI_REDBG + ANSI_BLACK + CheckerBoard[7][i] + ANSI_RESET);
-            }
-            System.out.print(" ");
-        }
-        System.out.println();
     }
 }
